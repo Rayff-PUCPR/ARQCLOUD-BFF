@@ -83,3 +83,29 @@ Para rodar os testes:
 ```bash
 npm test
 ```
+
+## Docker
+
+Build local da imagem:
+
+```bash
+docker build -t rotacerta-bff:v1 .
+```
+
+Execucao local em container, acessando os microservicos que estao rodando na maquina host:
+
+```bash
+docker run --rm -p 3000:3000 \
+  -e ORDERS_SERVICE_URL=http://host.docker.internal:3001 \
+  -e ROUTES_SERVICE_URL=http://host.docker.internal:3002 \
+  -e CALCULATION_FUNCTION_URL=https://rota-certa-2026-beaja6c8g7esbxfm.eastus-01.azurewebsites.net/api/calculate-route \
+  rotacerta-bff:v1
+```
+
+Publicacao no Docker Hub:
+
+```bash
+docker login
+docker build -t <usuario-dockerhub>/rotacerta-bff:v1 .
+docker push <usuario-dockerhub>/rotacerta-bff:v1
+```
