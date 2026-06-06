@@ -106,6 +106,6 @@ Publicacao no Docker Hub:
 
 ```bash
 docker login
-docker build -t <usuario-dockerhub>/rotacerta-bff:v1 .
-docker push <usuario-dockerhub>/rotacerta-bff:v1
+docker build -t rayff/rotacerta-bff:v1 .
+docker push rayff/rotacerta-bff:v1
 ```
