@@ -48,6 +48,12 @@ export class RoutesClient extends HttpClient {
     });
   }
 
+  finishRoute(routeId: string) {
+    return this.request<RouteDto>(`${this.baseUrl}/api/v1/routes/${routeId}/finish`, {
+      method: 'POST'
+    });
+  }
+
   resetRoutes() {
     return this.request<{ reset: boolean }>(`${this.baseUrl}/api/v1/routes/reset`, {
       method: 'POST'

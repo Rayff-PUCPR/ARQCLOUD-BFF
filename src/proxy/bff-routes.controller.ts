@@ -64,7 +64,10 @@ export class BffRoutesController {
   async acceptRoute(@Param('id') id: string, @Body('driverId') driverId: string) {
     const route = await this.routesClient.acceptRoute(id, driverId);
     await Promise.allSettled(
-      route.stops.map((stop) => this.ordersClient.updateOrderStatus(stop.orderId, 'IN_ROUTE'))
+      [
+        this.ordersClient.updateDriverStatus(driverId, 'ON_ROUTE'),
+        ...route.stops.map((stop) => this.ordersClient.updateOrderStatus(stop.orderId, 'IN_ROUTE'))
+      ]
     );
     return route;
   }
@@ -87,6 +90,19 @@ export class BffRoutesController {
   async completeStop(@Param('id') id: string, @Param('orderId') orderId: string) {
     const route = await this.routesClient.completeStop(id, orderId);
     await this.ordersClient.updateOrderStatus(orderId, 'DELIVERED').catch(() => undefined);
+    if (route.status === 'FINISHED' && route.driverId) {
+      await this.ordersClient.updateDriverStatus(route.driverId, 'AVAILABLE').catch(() => undefined);
+    }
+    return route;
+  }
+
+  @Post('routes/:id/finish')
+  async finishRoute(@Param('id') id: string) {
+    const route = await this.routesClient.finishRoute(id);
+    await Promise.allSettled([
+      ...route.stops.map((stop) => this.ordersClient.updateOrderStatus(stop.orderId, 'DELIVERED')),
+      ...(route.driverId ? [this.ordersClient.updateDriverStatus(route.driverId, 'AVAILABLE')] : [])
+    ]);
     return route;
   }
 }

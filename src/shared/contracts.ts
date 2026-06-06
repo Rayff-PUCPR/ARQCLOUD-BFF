@@ -1,5 +1,6 @@
 export type OrderStatus = 'PENDING' | 'AWAITING_ROUTE' | 'IN_ROUTE' | 'DELIVERED' | 'CANCELED';
 export type RouteStatus = 'AVAILABLE' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELED';
+export type DriverStatus = 'AVAILABLE' | 'ON_ROUTE' | 'OFFLINE';
 
 export interface OrderDto {
   id: string;
@@ -31,7 +32,7 @@ export interface DriverDto {
   id: string;
   name: string;
   vehicle: string;
-  status: 'AVAILABLE' | 'ON_ROUTE' | 'OFFLINE';
+  status: DriverStatus;
   region: string;
 }
 

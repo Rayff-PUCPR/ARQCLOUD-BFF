@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HttpClient } from '../http/http-client';
-import { CreateDriverDto, DriverDto, OrderDto, OrderStatus } from '../contracts';
+import { CreateDriverDto, DriverDto, DriverStatus, OrderDto, OrderStatus } from '../contracts';
 
 @Injectable()
 export class OrdersClient extends HttpClient {
@@ -43,6 +43,13 @@ export class OrdersClient extends HttpClient {
     return this.request<DriverDto>(`${this.baseUrl}/api/v1/drivers`, {
       method: 'POST',
       body: JSON.stringify(body)
+    });
+  }
+
+  updateDriverStatus(driverId: string, status: DriverStatus) {
+    return this.request<DriverDto>(`${this.baseUrl}/api/v1/drivers/${driverId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status })
     });
   }
 
